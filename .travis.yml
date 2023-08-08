@@ -1,0 +1,15 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t honza394/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true honza394/react-test npm test
+
+after_success:
+  - docker build -t honza394/multi-client ./client
+  - docker build -t honza394/multi-nginx ./nginx
+  - docker build -t honza394/multi-server ./server
+  - docker build -t honza394/multi-worker ./worker
